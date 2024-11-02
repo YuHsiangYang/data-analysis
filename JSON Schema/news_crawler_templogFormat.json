@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "keyword":{ "type": "string" },
+        "current_page":{ "type": "integer" },
+        "time_stamp":{ "type": "string" },
+        "news_array": {"type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "title": { "type": "string" },
+                    "href": { "type": "string" },
+                    "publication_date": { "type": "string" },
+                    "summary": { "type": "string" }
+                },
+                "required": ["title", "href", "publication_date", "summary"]
+            }
+        }
+    }
+}

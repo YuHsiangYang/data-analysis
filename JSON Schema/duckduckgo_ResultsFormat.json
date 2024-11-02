@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "array",
+    "properties": {
+        "title": {
+            "type": "string"
+        },
+        "href":{
+            "type": "string"
+        },
+        "body": {
+            "type": "string"
+        }
+    },
+    "required":["title", "href", "body"]
+}

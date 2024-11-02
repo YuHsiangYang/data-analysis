@@ -1,0 +1,5 @@
+temp/
+testing files/
+.venv/
+資料
+unittests/test_makingnotes.py

@@ -1,0 +1,48 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "prompt": "Results",
+    "type": "array",
+    "subtopics": {
+        "type": "object",
+        "properties": {
+            "subtopic": {
+                "type": "string"
+            },
+            "queries": {
+                "type": "array",
+                "properties":{
+                    "query": {
+                        "type": "string"
+                    },
+                    "results":{
+                        "type": "array",
+                        "properties":{
+                            "title": {
+                                "type": "string"
+                            },
+                            "href": {
+                                "type": "string"
+                            },
+                            "body": {
+                                "type": "string"
+                            }
+                        },
+                        "required":[
+                            "title",
+                            "href",
+                            "body"
+                        ]
+                    }
+                },
+                "required":[
+                    "query",
+                    "results"
+                ]
+            }
+        },
+        "required": [
+            "subtopic",
+            "queries"
+        ]
+    }
+}
