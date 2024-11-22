@@ -1,6 +1,5 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-import selenium.common.exceptions
 from selenium.webdriver.support import expected_conditions as EC
 import json
 import time
@@ -10,8 +9,17 @@ import utilities
 import os
 from selenium import webdriver
 from tqdm import tqdm
+import datetime
 
-def crawl_keyword(keyword_input: str) -> json:
+
+def crawl_keyword_date_range(keyword_input: str, start=datetime.date(2013, 1, 1), end=datetime.date(2023, 12, 31), interval=5) -> json:
+    results = []
+    for i in range(start.year, end.year, interval):
+        start_date = datetime.date(i, 1, 1)
+        end_date = datetime.date(i + interval, 1, 1)
+        crawl_keyword(keyword_input, datetime.date.strftime(start_date, "%Y-%m-%d"), datetime.date.strftime(end_date, "%Y-%m-%d"))
+
+def crawl_keyword(keyword_input: str, start_date="2013-01-01", end_date="2023-12-31") -> json:
     news_provider = "聯合新聞網"
     complete_news_collection = []
     page_index_current = 0
@@ -27,7 +35,7 @@ def crawl_keyword(keyword_input: str) -> json:
     
     
     
-    chrome_browser = webdriver.Chrome()
+    chrome_browser = webdriver.Chrome(options=webdriver.ChromeOptions().add_argument("--headless"))
     main_page_url = "https://udndata.com/ndapp/Index?cp=udn" # The main base URL for searching the keyword
     
     chrome_browser.get(main_page_url)
@@ -46,11 +54,11 @@ def crawl_keyword(keyword_input: str) -> json:
     
     #Input the start date
     date_start_datePicker = chrome_browser.find_element(By.XPATH, '//*[@id="datepicker-start"]')
-    date_start_datePicker.send_keys("2013-01-01") #Date start to search
+    date_start_datePicker.send_keys(start_date) #Date start to search
     
     #Input the end date
     date_end_datePicker = chrome_browser.find_element(By.XPATH, '//*[@id="datepicker-end"]')
-    date_end_datePicker.send_keys("2023-12-31") #Date end to search
+    date_end_datePicker.send_keys(end_date) #Date end to search
     
     #After submitting the form, the page will reload to the search result page
     submit_form_btn = chrome_browser.find_element(By.XPATH, '//*[@id="udnform"]/button')
@@ -106,6 +114,7 @@ def crawl_keyword(keyword_input: str) -> json:
             page_index_current += 1
             #Update the progress
             pbar.update(1)
+        utilities.dump_temp_results(complete_news_collection, keyword_input, 0, news_provider)
     return complete_news_collection
         
 

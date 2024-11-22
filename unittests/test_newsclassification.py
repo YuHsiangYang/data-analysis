@@ -1,3 +1,6 @@
+import utilities
+import LLM
+import config
 import unittest
 import logging
 import json
@@ -6,13 +9,12 @@ import os
 sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..')))
 
-import config
-import LLM
 
 class test_GeneratePerformance(unittest.TestCase):
     def setUp(self):
         self.theme_description = "主要是需要了解馬拉松和空汙的關係，以及空汙對馬拉松的影響，如果文章沒有提到這些或是跟這些無關，就不要放進來"
         self.theme = "馬拉松跟空汙的關係"
+        self.news_provider = config.NewsProvider.UDN_NEWS.value
 
         # Configure the logger
         logging.basicConfig(
@@ -23,10 +25,51 @@ class test_GeneratePerformance(unittest.TestCase):
         self.results_related = []
         self.results_unrelated = []
         self.results_mixed = []
-
         self.mixed_results_answers = []
+    
+    def test_read_news_from_directory(self):
+        news_articles = utilities.read_news_articles_from_directory(config.UNION_RESULTS_DIRECTORY)
+        self.logger.debug(f"News articles: {news_articles}")
 
+    def test_filter(self):
+        #Import the news articles using read_news_from_directory
+        raw_news_articles = utilities.read_news_articles_from_directory(os.path.join(config.UNION_RESULTS_DIRECTORY))
+        #Import both related and unrelated articles from the directory as processed by LLM
+        processed_articles = utilities.read_news_articles_from_directory(config.FILTERED_DIRECTORY)
+        
+        
+        #Filter the news article by news provider
+        raw_news_articles = [news_article for news_article in raw_news_articles if news_article["news_provider"] == self.news_provider]
+        
+        processed_hrefs = [news_article["href"] for news_article in processed_articles]
+        
+        self.logger.debug(f"Processed articles: {processed_articles}")
+        
+        for news_article in raw_news_articles:
+            #Check if the news article is already processed
+            if news_article["href"] in processed_hrefs:
+                continue
+            
+            is_related = LLM.identify_relevance(news_article, self.theme, self.theme_description)
+            if is_related:
+                self.results_related.append(news_article)
+            else:
+                self.results_unrelated.append(news_article)
+            
+            
+            #Writ the related news article to the directory
+            #Read the related articles from the file
+            utilities.append_to_json_file(os.path.join(config.FILTERED_DIRECTORY, news_article["news_provider"], f"{news_article["filename"]}_filtered.json"), self.results_related)
+                
+                
+            #Writ the unrelated news article to the directory
+            utilities.append_to_json_file(os.path.join(config.FILTERED_DIRECTORY, news_article["news_provider"], "unrelated_articles.json"), self.results_unrelated)
+                                    
     def test_generate_mixed_results(self):
+        """
+        Generate mixed results for testing
+        """
+        
         # import both related and unrelated articles
         with open(os.path.join(r"資料\新聞相關性測試", config.NewsProvider.UDN_NEWS.value, "related.json"), "r", encoding="UTF-8") as file:
             related_articles = json.load(file)
@@ -37,7 +80,7 @@ class test_GeneratePerformance(unittest.TestCase):
             unrelated_articles = json.load(file)
             for article in unrelated_articles:
                 article['is_related'] = False
-
+                
         # combine the articles
         mixed_articles = related_articles + unrelated_articles
 

@@ -1,0 +1,66 @@
+[
+    {
+        "model": "gpt-4o",
+        "non_batchAPI": {
+            "input_price_per_1M": 2.5,
+            "output_price_per_1M": 10
+        },
+        "batchAPI": {
+            "input_price_per_1M": 1.25,
+            "output_price_per_1M": 5
+        }
+    },
+    {
+        "model": "gpt-4o-2024-11-20",
+        "non_batchAPI": {
+            "input_price_per_1M": 2.5,
+            "output_price_per_1M": 10
+        },
+        "batchAPI": {
+            "input_price_per_1M": 1.25,
+            "output_price_per_1M": 5
+        }
+    },
+    {
+        "model": "gpt-4o-2024-08-06",
+        "non_batchAPI": {
+            "input_price_per_1M": 2.5,
+            "output_price_per_1M": 10
+        },
+        "batchAPI": {
+            "input_price_per_1M": 1.25,
+            "output_price_per_1M": 5
+        }
+    },
+    {
+        "model": "gpt-4o-audio-preview",
+        "non_batchAPI": {
+            "input_price_per_1M": 2.5,
+            "output_price_per_1M": 10,
+            "audio_input_price_per_1M": 100,
+            "audio_output_price_per_1M": 200
+        },
+        "batchAPI": null
+    },
+    {
+        "model": "gpt-4o-audio-preview-2024-10-01",
+        "non_batchAPI": {
+            "input_price_per_1M": 2.5,
+            "output_price_per_1M": 10,
+            "audio_input_price_per_1M": 100,
+            "audio_output_price_per_1M": 200
+        },
+        "batchAPI": null
+    },
+    {
+        "model": "gpt-4o-2024-05-13",
+        "not_batchAPI": {
+            "input_price_per_1M": 5,
+            "output_price_per_1M": 15
+        },
+        "batchAPI": {
+            "input_price_per_1M": 2.5,
+            "output_price_per_1M": 7.5
+        }
+    }
+]

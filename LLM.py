@@ -1,5 +1,5 @@
 import json
-import ChatGPTAPI as chatGPT
+import ChatGPTAPI
 import re
 
 
@@ -25,7 +25,7 @@ def formulateQueries(searchPrompt) -> json:
             "_prompt_", searchPrompt)
 
         # Uses google chrome to get the response from ChatGPT
-        response_str = chatGPT.askGPT(formulate_queries_Instruction)["response"]
+        response_str = ChatGPTAPI.GetChatGPTResponse(formulate_queries_Instruction).response
 
         json_pattern = re.compile(r'```json(.*?)```', re.DOTALL)
         match = json_pattern.search(response_str)
@@ -55,7 +55,7 @@ def identify_relevance(news_article: json, theme: str, theme_description: str) -
         # Convert results to string
         results_str = json.dumps(article_without_link, ensure_ascii=False)
 
-        response = chatGPT.customInstructions(filter_news_results_Instruction,
+        response = ChatGPTAPI.customInstructions(filter_news_results_Instruction,
                                               {
                                                   "__news_article_summary__": results_str,
                                                   "__theme__": theme,
@@ -110,5 +110,5 @@ def filterResults(results: json, search_prompt: str) -> json:
                 "_searchresults_", results_str)
 
             # Use ChatGPT to get the response
-            response_str = chatGPT.askGPT(filter_results_Instruction)["response"]
+            response_str = ChatGPTAPI.GetChatGPTResponse(filter_results_Instruction).response
             print(response_str)

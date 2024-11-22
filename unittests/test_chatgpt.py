@@ -25,7 +25,7 @@ class Test_ChatGPT(unittest.TestCase):
     def test_ask_question(self):
         # Test the chatGPT model
         question = "Hi"
-        answer = LLM.chatGPT.askGPT(question)["response"]
+        answer = LLM.ChatGPTAPI.askGPT(question)["response"]
         self.assertIsNotNone(answer)
         self.logger.info(answer)    
         
